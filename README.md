@@ -1,11 +1,22 @@
-The code I have developed for my PhD project involving modeling V1 surround suppression. 
+# V1: early prototype of a surround-suppression model
 
-Parameter selection.ipynb generates a large set of sets of input parameters by finding a few sets of parameters within given ranges that have desired properties in the output model, and then adding random noise to create 30,000+ sets of input parameters.
+Early code from my Ph.D. project on surround suppression in primary visual cortex (V1), with Lai-Sang Young at NYU Courant. This repository holds the first prototype: a small conductance-based leaky integrate-and-fire (LIF) network with three cell types, written in Numba, and a neural-network surrogate used to search its parameter space.
 
-LIF Model Numba 3 neuron types.ipynb contains the code to run the simulation and generate plots. It is the easiest way to tweak the simulation for experimentation without affecting other notebooks.
+The current model is much larger (136,000 neurons, 36 million synapses, short-term plasticity) and runs on the GPU; it is not in this repository. A manuscript is in preparation, and that code will be released with the paper.
 
-LIF DNN Three Neuron Types.ipynb contains the code to train a neural network to predict the output of the simulation given a set of input parameters. It requires Parameter selection.ipynb to be run first to generate the training data.
+## The prototype
 
-LIF_sim.py contains the actual simulation code, along with code to generate training data for the neural network, either in a directed fashion or a random fashion.
+- 400 neurons: 300 excitatory, 66 PV and 34 SOM inhibitory cells, with type-specific synaptic strengths and randomized connectivity.
+- Conductance-based LIF dynamics with Poisson external drive, integrated at 0.1 ms steps and compiled with Numba.
+- Readouts: firing rate and spike-count variability for each cell type.
 
-Please note that this project is a WIP and the code is currently being developed by me alone, so there may be formatting issues or extraneous code blocks which will be fixed in later iterations.
+## Files
+
+| File | Purpose |
+|---|---|
+| `LIF_sim.py` | The simulator, plus functions that generate training data for the surrogate (directed or random parameter sampling). |
+| `LIF Model Numba 3 neuron types.ipynb` | Runs the simulation and makes plots; the easiest place to experiment. |
+| `Parameter Selection.ipynb` | Finds parameter sets with the desired network behavior, then perturbs them with noise to build a training set of 30,000+ parameter sets. |
+| `LIF DNN Three Neuron Types.ipynb` | Trains a neural network to predict simulation outputs from input parameters. Run `Parameter Selection.ipynb` first. |
+
+This is research code; the notebooks are kept as they were when the prototype was in use.
